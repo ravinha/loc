@@ -14,7 +14,7 @@ import javax.servlet.ServletRegistration;
  */
 public class WebAppInitializer implements WebApplicationInitializer {
 
-    private static final Class<?>[] CONFIG_CLASSES = new Class<?>[]{WebSpringConfig.class};
+    private static final Class<?>[] CONFIG_CLASSES = new Class<?>[]{SecurityConfig.class};
 
     @Override
     public void onStartup(ServletContext container) {

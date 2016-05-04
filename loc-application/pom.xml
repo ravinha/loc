@@ -40,6 +40,11 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.2.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0-rc2</version>
+        </dependency>
 
     </dependencies>
 </project>
