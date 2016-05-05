@@ -1,4 +1,4 @@
-package pl.agh.loc;
+package pl.agh.loc.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import pl.agh.loc.daos.UserRepository;
 import pl.agh.loc.services.MongoUserDetailService;
 
 /**
@@ -22,6 +23,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MongoUserDetailService mongoUserDetailService;
+
+    @Autowired
+    private AuthFailure authFailure;
+
+    @Autowired
+    private AuthSuccess authSuccess;
+
+    @Autowired
+    private EntryPointUnauthorizedHandler entryPointUnauthorizedHandler;
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -39,10 +49,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/dodaj").hasRole("USER").and()
+                .csrf().disable()
+                .exceptionHandling()
+                    .authenticationEntryPoint(entryPointUnauthorizedHandler)
+                    .and()
                 .formLogin()
-                .and()
-                .httpBasic();
+                    .successHandler(authSuccess)
+                    .failureHandler(authFailure)
+                    .and()
+                .authorizeRequests()
+                .antMatchers("/**")
+                .authenticated();
     }
 }

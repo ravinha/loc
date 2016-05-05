@@ -1,4 +1,4 @@
-package pl.agh.loc;
+package pl.agh.loc.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
