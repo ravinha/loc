@@ -13,8 +13,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <title>League of Comparers</title>
 </head>
-<body>
-<div class="container">
+<body ng-app="hello">
+< class="container">
     <!-- Static navbar -->
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -55,10 +55,11 @@
     </nav>
 
     <!-- Main component for a primary marketing message or call to action -->
-    <strong>${info}</strong>
+    <div ng-controller="home" ng-cloak class="ng-cloak">
+    <strong>{{greeting}}</strong>
+    </div>
 </div>
-</body>
-<body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.js"></script>
+<script src="/js/helloController.js"></script>
 </body>
 </html>
