@@ -1,2 +1,6 @@
 /.idea
-loc-webapp/target/
+target/
+/.mvn
+loc_2.iml
+mvnw
+mvnw.cmd
