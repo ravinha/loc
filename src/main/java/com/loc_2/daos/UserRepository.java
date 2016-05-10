@@ -29,8 +29,9 @@ public class UserRepository {
         return mongoOperation.findById(id, User.class);
     }
 
-    public void save(User user) {
+    public User save(User user) {
         mongoOperation.save(user);
+        return findByUsername(user.getUsername());
     }
 
     public User findByUsername(String username) {

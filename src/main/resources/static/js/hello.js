@@ -8,6 +8,10 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
         templateUrl: 'login.html',
         controller: 'navigation',
         controllerAs: 'controller'
+    }).when('/register', {
+        templateUrl: 'register.html',
+        controller: 'navigation',
+        controllerAs: 'controller'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -70,7 +74,16 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
                 $rootScope.authenticated = false;
                 $location.path("/");
             });
-        }
+        };
+
+        self.register = function () {
+            $http.post('/user/register', self.credentials).success(function(data, status){
+                $location.path("/");
+                console.log("Registration succeeded")
+            }).error(function(data, status){
+                console.log("Registration failure")
+            });
+        };
 
     }).controller('home', function ($http) {
     var self = this;
