@@ -85,6 +85,17 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
             });
         };
 
+        self.getRandomGames = function () {
+            resources = {"key": "PUTYOURAPIKEY","summonerId":"PUTSUMMONERID"};
+            $http.get('/riot/recentgames/'+resources.key+'/'+resources.summonerId).success(function(data, status){
+                console.log("Random games success ");
+                console.log(data);
+                console.log(JSON.stringify(data));
+            }).error(function(data, status){
+                console.log("Random games failure "+status)
+            });
+        };
+
     }).controller('home', function ($http) {
     var self = this;
     $http.get('/resource/').then(function (response) {

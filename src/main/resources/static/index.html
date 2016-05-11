@@ -19,6 +19,7 @@
         <li><a href="#/login">login</a></li>
         <li ng-show="!authenticated"><a href="#/register">register</a></li>
         <li ng-show="authenticated"><a href="" ng-click="nav.logout()">logout</a></li>
+        <li ng-show="authenticated"><a href="" ng-click="nav.getRandomGames()">Get Random Games</a></li>
     </ul>
 </div>
 <div ng-view class="container"></div>
