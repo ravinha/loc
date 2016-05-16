@@ -12,6 +12,10 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
         templateUrl: 'register.html',
         controller: 'navigation',
         controllerAs: 'controller'
+    }).when('/apikey', {
+        templateUrl: 'apikey.html',
+        controller: 'navigation',
+        controllerAs: 'controller'
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -85,14 +89,28 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
             });
         };
 
-        self.getRandomGames = function () {
-            resources = {"key": "PUTYOURAPIKEY","summonerId":"PUTSUMMONERID"};
-            $http.get('/riot/recentgames/'+resources.key+'/'+resources.summonerId).success(function(data, status){
-                console.log("Random games success ");
-                console.log(data);
+        self.setApiKey = function () {
+            $http.post('/riot/setapikey', self.apikey).success(function(data, status){
+                console.log("Generate ApiKey success ");
+            }).error(function(data, status){
+                console.log("Generate ApiKey failure "+status)
+            });
+        };
+
+        self.refreshStats = function () {
+            $http.post('/riot/refreshstats', {}).success(function(data, status){
+                console.log("Refresh Stats success ");
+            }).error(function(data, status){
+                console.log("Refresh Stats failure "+status)
+            });
+        };
+
+        self.getStats = function () {
+            $http.get('/riot/getstats').success(function(data, status){
+                console.log("Get Stats success ");
                 console.log(JSON.stringify(data));
             }).error(function(data, status){
-                console.log("Random games failure "+status)
+                console.log("Get Stats failure "+status)
             });
         };
 

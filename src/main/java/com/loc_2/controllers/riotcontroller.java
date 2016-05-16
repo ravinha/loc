@@ -1,14 +1,17 @@
 package com.loc_2.controllers;
 
 import com.loc_2.dtos.RecentGamesDto;
+import com.loc_2.dtos.ApiKeyDto;
+import com.loc_2.entities.RawStatsSummary;
+import com.loc_2.services.RiotApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+
+import java.security.Principal;
 
 /**
  * Created by Rafal on 2016-05-11.
@@ -17,18 +20,35 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/riot")
 public class RiotController {
 
-    @RequestMapping(value = "/recentgames/{key}/{summonerId}", method = RequestMethod.GET)
-    public ResponseEntity<RecentGamesDto> getGames(@PathVariable("key") String key, @PathVariable("summonerId") Long summonerId) {
-        RestTemplate restTemplate = new RestTemplate();
-        RecentGamesDto recentGamesDto;
-        try {
-            recentGamesDto = restTemplate.getForObject("https://eune.api.pvp.net/api/lol/eune/v1.3/game/by-summoner/" + summonerId + "/recent?api_key=" + key, RecentGamesDto.class);
-            if (recentGamesDto != null) {
-                return new ResponseEntity<>(recentGamesDto, HttpStatus.OK);
-            }
-        } catch (RestClientException rce) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @Autowired
+    private RiotApiService riotService;
+
+    @RequestMapping(value = "/refreshstats", method = RequestMethod.POST)
+    public ResponseEntity<RawStatsSummary> refreshStats(Principal principal) {
+        String username = principal.getName();
+        RawStatsSummary rawStatsSummary = riotService.generateSummaryStats(username);
+        if (rawStatsSummary != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @RequestMapping(value = "/getstats", method = RequestMethod.GET)
+    public ResponseEntity<RawStatsSummary> getSummaryStats(Principal principal) {
+        String username = principal.getName();
+        RawStatsSummary rawStatsSummary = riotService.getSummaryStats(username);
+        if (rawStatsSummary != null) {
+            return new ResponseEntity<>(rawStatsSummary, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/setapikey", method = RequestMethod.POST)
+    public ResponseEntity<RecentGamesDto> setApiKey(Principal principal, @RequestBody ApiKeyDto apikey) {
+        String username = principal.getName();
+        riotService.setApiKey(username, apikey.getKey());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 }

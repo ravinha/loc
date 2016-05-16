@@ -3,6 +3,7 @@ package com.loc_2.controllers;
 import com.loc_2.daos.UserRepository;
 import com.loc_2.entities.User;
 import com.loc_2.exceptions.AccountExistsException;
+import com.loc_2.services.RiotApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

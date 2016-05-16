@@ -2,6 +2,8 @@ package com.loc_2.config;
 
 import com.google.common.collect.Sets;
 import com.loc_2.daos.UserRepository;
+import com.loc_2.services.RiotApiService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
