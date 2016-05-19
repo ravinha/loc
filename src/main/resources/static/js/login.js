@@ -1,11 +1,11 @@
 angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvider) {
 
     $routeProvider.when('/', {
-        templateUrl: 'home.html',
+        templateUrl: 'login.html',
         controller: 'home',
         controllerAs: 'controller'
-    }).when('/login', {
-        templateUrl: 'login.html',
+    }).when('/home', {
+        templateUrl: 'home.html',
         controller: 'navigation',
         controllerAs: 'controller'
     }).when('/register', {
@@ -61,7 +61,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
             authenticate(self.credentials, function (authenticated) {
                 if (authenticated) {
                     console.log("Login succeeded")
-                    $location.path("/");
+                    $location.path("/home");
                     self.error = false;
                     $rootScope.authenticated = true;
                 } else {
