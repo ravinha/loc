@@ -36,7 +36,7 @@ public class RiotApiService {
             ObjectMapper objectMapper = new ObjectMapper();
             summoner = objectMapper.convertValue(summoner, new TypeReference<Map<String, SummonerDto>>() {
             });
-            user.setSummonerId(summoner.get(user.getUsername()).getId());
+            user.setSummonerId(summoner.get(user.getUsername().replaceAll("\\s+","").toLowerCase()).getId());
             userRepository.save(user);
         }
         return user.getSummonerId();
