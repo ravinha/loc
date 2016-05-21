@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
 import java.security.Principal;
+import java.util.Date;
 
 /**
  * Created by Rafal on 2016-05-11.
@@ -48,5 +49,12 @@ public class RiotController {
         String username = principal.getName();
         riotService.setApiKey(username, apikey.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getlastrefresh", method = RequestMethod.GET)
+    public ResponseEntity<Date> getLastRefresh(Principal principal) {
+        String username = principal.getName();
+        System.out.println("RiotController.getLastRefresh "+riotService.getLastRefresh(username));
+        return new ResponseEntity<>(riotService.getLastRefresh(username), HttpStatus.OK);
     }
 }
