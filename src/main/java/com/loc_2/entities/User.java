@@ -1,5 +1,6 @@
 package com.loc_2.entities;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -11,10 +12,10 @@ public class User {
     @Id
     private String username;
     private String apikey;
-    private Long summonerId;
     private String password;
     private String role;
-    private RawStatsSummary statsSum;
+    @DBRef
+    private Summoner summoner;
 
     public User() {
     }
@@ -55,15 +56,6 @@ public class User {
         this.role = role;
     }
 
-
-    public RawStatsSummary getStatsSum() {
-        return statsSum;
-    }
-
-    public void setStatsSum(RawStatsSummary statsSum) {
-        this.statsSum = statsSum;
-    }
-
     public String getApikey() {
         return apikey;
     }
@@ -72,11 +64,11 @@ public class User {
         this.apikey = apikey;
     }
 
-    public Long getSummonerId() {
-        return summonerId;
+    public Summoner getSummoner() {
+        return summoner;
     }
 
-    public void setSummonerId(Long summonerId) {
-        this.summonerId = summonerId;
+    public void setSummoner(Summoner summoner) {
+        this.summoner = summoner;
     }
 }

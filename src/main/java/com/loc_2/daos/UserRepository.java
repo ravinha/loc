@@ -1,9 +1,8 @@
 package com.loc_2.daos;
 
 import com.loc_2.config.SpringMongoConfig;
+import com.loc_2.entities.Summoner;
 import com.loc_2.entities.User;
-import com.loc_2.services.RiotApiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -29,6 +28,11 @@ public class UserRepository {
     public User save(User user) {
         mongoOperation.save(user);
         return findByUsername(user.getUsername());
+    }
+
+    public User save(Summoner summoner) {
+        mongoOperation.save(summoner);
+        return findByUsername(summoner.getName());
     }
 
     public User findByUsername(String username) {

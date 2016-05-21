@@ -30,6 +30,9 @@ public class UserController {
             throw new AccountExistsException();
         user.setRole("user");
         User createdAccount = repository.save(user);
+        if(createdAccount.getSummoner()==null){
+            repository.save(user.getSummoner());
+        }
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
     }
 }

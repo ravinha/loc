@@ -1,11 +1,14 @@
 package com.loc_2.services;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.loc_2.daos.UserRepository;
 import com.loc_2.dtos.RecentGamesDto;
 import com.loc_2.dtos.SummonerDto;
 import com.loc_2.entities.RawStatsSummary;
+import com.loc_2.entities.Summoner;
 import com.loc_2.entities.User;
 import com.loc_2.exceptions.ApiKeyNotFoundException;
 import com.loc_2.exceptions.RiotLimitException;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -30,27 +34,29 @@ public class RiotApiService {
     }
 
     public Long getSummonerId(User user) throws ApiKeyNotFoundException, RiotLimitException, HttpClientErrorException {
-        Long id = user.getSummonerId();
+        Summoner summoner = user.getSummoner();
+        Long id = summoner.getId();
         if (id == null) {
-            Map<String, SummonerDto> summoner = restWrapper.getForObject("https://eune.api.pvp.net/api/lol/eune/v1.4/summoner/by-name/" + user.getUsername() + "?api_key=" + getApiKey(user), Map.class);
+            Map<String, SummonerDto> summonerDto = restWrapper.getForObject("https://eune.api.pvp.net/api/lol/eune/v1.4/summoner/by-name/" + summoner.getName() + "?api_key=" + getApiKey(user), Map.class);
             ObjectMapper objectMapper = new ObjectMapper();
-            summoner = objectMapper.convertValue(summoner, new TypeReference<Map<String, SummonerDto>>() {
+            summonerDto = objectMapper.convertValue(summonerDto, new TypeReference<Map<String, SummonerDto>>() {
             });
-            user.setSummonerId(summoner.get(user.getUsername().replaceAll("\\s+","").toLowerCase()).getId());
-            userRepository.save(user);
+            summoner.setId(summonerDto.get(summoner.getName().replaceAll("\\s+","").toLowerCase()).getId());
+            userRepository.save(summoner);
         }
-        return user.getSummonerId();
+        return summoner.getId();
     }
 
     public RawStatsSummary generateSummaryStats(String username) throws ApiKeyNotFoundException, RiotLimitException, HttpClientErrorException {
         RawStatsSummary rawStatsSummary = new RawStatsSummary();
         getRecentGames(username).getGames().forEach(gameDto -> rawStatsSummary.addGameStats(gameDto.getStats()));
         User user = userRepository.findByUsername(username);
-        user.setStatsSum(rawStatsSummary);
-        userRepository.save(user);
+        Summoner summoner = user.getSummoner();
+        summoner.setStatsSum(rawStatsSummary);
+        summoner.setLastRefresh(new Date());
+        userRepository.save(summoner);
         return rawStatsSummary;
     }
-
 
     private String getApiKey(User user) throws ApiKeyNotFoundException {
         String apikey = user.getApikey();
@@ -67,9 +73,13 @@ public class RiotApiService {
 
     public RawStatsSummary getSummaryStats(String username) {
         User user = userRepository.findByUsername(username);
-        RawStatsSummary statsSummary = user.getStatsSum();
+        RawStatsSummary statsSummary = user.getSummoner().getStatsSum();
         if (statsSummary == null)
             return generateSummaryStats(username);
         return statsSummary;
+    }
+
+    public Date getLastRefresh(String username) {
+        return userRepository.findByUsername(username).getSummoner().getLastRefresh();
     }
 }

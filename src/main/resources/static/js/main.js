@@ -143,6 +143,16 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
             console.log("Get Stats failure " + status)
         });
     };
-    scope.getStats();
 
+    scope.getLastRefresh = function () {
+        $http.get('/riot/getlastrefresh').success(function (data, status) {
+            $rootScope.lastRefresh = data;
+            console.log("Get Last Refresh success ");
+            console.log(JSON.stringify(data));
+        }).error(function (data, status) {
+            console.log("Get Last Refresh failure " + status)
+        });
+    };
+    scope.getStats();
+    scope.getLastRefresh();
 }]);
