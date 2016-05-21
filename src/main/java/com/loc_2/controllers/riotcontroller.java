@@ -49,6 +49,4 @@ public class RiotController {
         riotService.setApiKey(username, apikey.getKey());
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }

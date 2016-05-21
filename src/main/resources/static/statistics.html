@@ -1,0 +1,28 @@
+<div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
+<div ng-if="isApiKeySet">
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td><img src="chest.jpg" alt="Gold" style="width:100px;height:100px;"></td>
+            <td>Gold Earned</td>
+            <td>{{userData.goldEarned}}</td>
+        </tr>
+        <tr>
+            <td><img src="tower.png" alt="Tower" style="width:100px;height:100px;"></td>
+            <td>Turrets Killed</td>
+            <td>{{userData.turretsKilled}}</td>
+        </tr>
+        <tr>
+            <td><img src="skeleton_PNG5544.png" alt="Kills" style="width:100px;height:100px;"></td>
+            <td>Minions Killed</td>
+            <td>{{userData.minionsKilled}}</td>
+        </tr>
+        <tr>
+            <td><img src="help.png" alt="Assists" style="width:100px;height:100px;"></td>
+            <td>Assists</td>
+            <td>{{userData.assists}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" ng-click="refreshStats()">Refresh Stats</button>
+</div>
