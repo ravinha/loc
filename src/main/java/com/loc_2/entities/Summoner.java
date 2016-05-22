@@ -1,5 +1,6 @@
 package com.loc_2.entities;
 
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * Created by Rafal on 2016-05-21.
  */
-@Document(collection="summoners")
+@Document(collection = "summoners")
 public class Summoner {
     @Id
     private String name;

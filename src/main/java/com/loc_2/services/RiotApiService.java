@@ -1,9 +1,7 @@
 package com.loc_2.services;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.loc_2.daos.UserRepository;
 import com.loc_2.dtos.RecentGamesDto;
 import com.loc_2.dtos.SummonerDto;
@@ -41,7 +39,7 @@ public class RiotApiService {
             ObjectMapper objectMapper = new ObjectMapper();
             summonerDto = objectMapper.convertValue(summonerDto, new TypeReference<Map<String, SummonerDto>>() {
             });
-            summoner.setId(summonerDto.get(summoner.getName().replaceAll("\\s+","").toLowerCase()).getId());
+            summoner.setId(summonerDto.get(summoner.getName().replaceAll("\\s+", "").toLowerCase()).getId());
             userRepository.save(summoner);
         }
         return summoner.getId();
@@ -79,7 +77,10 @@ public class RiotApiService {
         return statsSummary;
     }
 
-    public Date getLastRefresh(String username) {
-        return userRepository.findByUsername(username).getSummoner().getLastRefresh();
+    public SummonerDto getLastRefresh(String username) {
+        Summoner summoner = userRepository.findByUsername(username).getSummoner();
+        SummonerDto summonerDto = new SummonerDto();
+        summonerDto.setLastRefresh(summoner.getLastRefresh());
+        return summonerDto;
     }
 }
