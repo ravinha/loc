@@ -1,18 +1,19 @@
 package com.loc_2.controllers;
 
-import com.loc_2.dtos.RecentGamesDto;
 import com.loc_2.dtos.ApiKeyDto;
+import com.loc_2.dtos.RecentGamesDto;
+import com.loc_2.dtos.SummonerDto;
 import com.loc_2.entities.RawStatsSummary;
 import com.loc_2.services.RiotApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientException;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
-import java.util.Date;
 
 /**
  * Created by Rafal on 2016-05-11.
@@ -52,9 +53,8 @@ public class RiotController {
     }
 
     @RequestMapping(value = "/getlastrefresh", method = RequestMethod.GET)
-    public ResponseEntity<Date> getLastRefresh(Principal principal) {
+    public ResponseEntity<SummonerDto> getLastRefresh(Principal principal) {
         String username = principal.getName();
-        System.out.println("RiotController.getLastRefresh "+riotService.getLastRefresh(username));
         return new ResponseEntity<>(riotService.getLastRefresh(username), HttpStatus.OK);
     }
 }
