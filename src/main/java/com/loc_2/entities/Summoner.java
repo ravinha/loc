@@ -17,6 +17,9 @@ public class Summoner {
     private RawStatsSummary statsSum;
     private Date lastRefresh;
 
+    public Summoner() {
+    }
+
     public Summoner(String name) {
         this.name = name;
     }

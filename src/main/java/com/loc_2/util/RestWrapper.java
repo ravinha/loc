@@ -1,4 +1,4 @@
-package com.loc_2.services;
+package com.loc_2.util;
 
 import com.loc_2.exceptions.RiotLimitException;
 import org.springframework.http.HttpStatus;

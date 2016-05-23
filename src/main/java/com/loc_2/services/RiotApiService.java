@@ -11,6 +11,7 @@ import com.loc_2.entities.Summoner;
 import com.loc_2.entities.User;
 import com.loc_2.exceptions.ApiKeyNotFoundException;
 import com.loc_2.exceptions.RiotLimitException;
+import com.loc_2.util.RestWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
