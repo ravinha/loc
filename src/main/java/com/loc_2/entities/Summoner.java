@@ -17,6 +17,10 @@ public class Summoner {
     private RawStatsSummary statsSum;
     private Date lastRefresh;
 
+    public Summoner(String name) {
+        this.name = name;
+    }
+
     public RawStatsSummary getStatsSum() {
         return statsSum;
     }
@@ -47,5 +51,15 @@ public class Summoner {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Summoner{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", statsSum=" + statsSum +
+                ", lastRefresh=" + lastRefresh +
+                '}';
     }
 }

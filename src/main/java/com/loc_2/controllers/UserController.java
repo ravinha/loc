@@ -1,5 +1,6 @@
 package com.loc_2.controllers;
 
+import com.loc_2.daos.SummonerRepository;
 import com.loc_2.daos.UserRepository;
 import com.loc_2.entities.User;
 import com.loc_2.exceptions.AccountExistsException;
@@ -22,16 +23,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private SummonerRepository summonerRepository;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> createAccount(@RequestBody User user) throws AccountExistsException {
-        if(repository.findByUsername(user.getUsername())!=null)
+        if(userRepository.findByUsername(user.getUsername())!=null)
             throw new AccountExistsException();
         user.setRole("user");
-        User createdAccount = repository.save(user);
+        User createdAccount = userRepository.save(user);
         if(createdAccount.getSummoner()==null){
-            repository.save(user.getSummoner());
+            summonerRepository.save(user.getSummoner());
         }
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);
     }
