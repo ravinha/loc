@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,7 @@ public class RiotController {
     @RequestMapping(value = "/refreshstats", method = RequestMethod.POST)
     public ResponseEntity<RawStatsSummary> refreshStats(Principal principal) {
         String username = principal.getName();
-        RawStatsSummary rawStatsSummary = riotService.generateSummaryStats(username);
+        RawStatsSummary rawStatsSummary = riotService.generateMySummaryStats(username);
         if (rawStatsSummary != null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -38,7 +39,17 @@ public class RiotController {
     @RequestMapping(value = "/getstats", method = RequestMethod.GET)
     public ResponseEntity<RawStatsSummary> getSummaryStats(Principal principal) {
         String username = principal.getName();
-        RawStatsSummary rawStatsSummary = riotService.getSummaryStats(username);
+        RawStatsSummary rawStatsSummary = riotService.getMyStats(username);
+        if (rawStatsSummary != null) {
+            return new ResponseEntity<>(rawStatsSummary, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/getstats/{name}", method = RequestMethod.GET)
+    public ResponseEntity<RawStatsSummary> getSummonerStats(Principal principal, @PathVariable("name") String summonerName) {
+        String username = principal.getName();
+        RawStatsSummary rawStatsSummary = riotService.getSummonerStats(summonerName, username);
         if (rawStatsSummary != null) {
             return new ResponseEntity<>(rawStatsSummary, HttpStatus.OK);
         }
