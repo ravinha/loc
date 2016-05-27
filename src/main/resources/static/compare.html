@@ -1,6 +1,17 @@
-<div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
 <div class="main-container">
     <div class="fixer-container">
+        <div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
+        <div ng-if="isApiKeySet">
+            <form role="form" ng-submit="compare()">
+                <div class="form-group pick-comparer-fields">
+                    <label for="name">With who do you want to compare?</label> <input type="text"
+                                                                                      class="form-control" id="name"
+                                                                                      name="summoner"
+                                                                                      ng-model="summoner.name"/>
+                </div>
+                <button class="btn btn-primary pick-comparer-button" type="submit">Compare</button>
+            </form>
+        </div>
         <div ng-repeat="comparee in comparees" class="comparers-table">
             <div ng-click="comparee.isVisible = !(comparee.isVisible)" class="comparers-table-name">
                 {{comparee.data.name}}
@@ -31,17 +42,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div ng-if="isApiKeySet">
-            <form role="form" ng-submit="compare()">
-                <div class="form-group">
-                    <label for="name">Lets Compare! Summoner Name:</label> <input type="text"
-                                                                                  class="form-control" id="name"
-                                                                                  name="summoner"
-                                                                                  ng-model="summoner.name"/>
-                </div>
-                <button class="btn btn-primary" type="submit">Compare</button>
-            </form>
         </div>
     </div>
 </div>
