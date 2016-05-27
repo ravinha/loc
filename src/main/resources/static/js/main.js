@@ -177,14 +177,14 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
     scope.getLastRefresh();
     }]).controller('compareCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', function ($scope, $http, $location, $route, $rootScope) {
         var scope = $scope;
-        scope.summoner = {}
-        scope.comparison = {}
-        scope.notificationData = {}
-        scope.compared = false
+        scope.summoner = {};
+        scope.comparison = {};
+        scope.notificationData = {};
+        scope.compared = false;
 
         scope.compare = function () {
             $http.get('/riot/compare/' + scope.summoner.name, {}).success(function (data, status) {
-                scope.comparison = data
+                scope.comparison = data;
                 scope.compared = true
             }).error(function (data, status) {
                 console.log("Compare failure " + status)
@@ -193,7 +193,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
 
         scope.getCompared = function () {
             $http.get('/riot/getcompared').success(function (data, status) {
-                scope.notificationData = data
+                scope.notificationData = data;
                 console.log(JSON.stringify(data));
             }).error(function (data, status) {
                 console.log("Get Compared failure " + status)
@@ -202,7 +202,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
 
         scope.setViewed = function () {
             $http.post('/riot/setviewed',{}).success(function (data, status) {
-                console.log("setviewed success " + data)
+                console.log("setviewed success " + data);
                 console.log(JSON.stringify(data));
             }).error(function (data, status) {
                 console.log("setviewed failure " + status)
