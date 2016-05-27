@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Hello AngularJS</title>
+    <title>League of Comparers</title>
     <style type="text/css">
         [ng\:cloak], [ng-cloak], .ng-cloak {
             display: none !important;
@@ -12,7 +12,8 @@
 <body ng-app="leagueOfComperors" ng-cloak class="ng-cloak">
 <nav ng-controller="main as main" class="container navbar navbar-default" style="background-color: #e3f2fd;" ng-show="authenticated">
     <ul class="nav navbar-nav navbar-left">
-        <li class="active"><a href="#/home">home</a></li>
+        <li class="active"><a href="#/home">Home</a></li>
+        <li><a href="" ng-click="main.goToComparison()">Compare</a></li>
         <li><a href="" ng-click="main.goToStats()">Your Stats</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">

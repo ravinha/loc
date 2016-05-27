@@ -1,0 +1,47 @@
+<div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
+<div ng-if="isApiKeySet && compared">
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <th></th>
+            <th>Atribute</th>
+            <th>{{comparison.comparer.username}}</th>
+            <th>{{comparison.comparee.name}}</th>
+        </tr>
+        <tr>
+            <td><img src="chest.jpg" alt="Gold" style="width:100px;height:100px;"></td>
+            <td>Gold Earned</td>
+            <td>{{comparison.comparersStats.goldEarned}}</td>
+            <td>{{comparison.compareeStats.goldEarned}}</td>
+        </tr>
+        <tr>
+            <td><img src="tower.png" alt="Tower" style="width:100px;height:100px;"></td>
+            <td>Turrets Killed</td>
+            <td>{{comparison.comparersStats.turretsKilled}}</td>
+            <td>{{comparison.compareeStats.turretsKilled}}</td>
+        </tr>
+        <tr>
+            <td><img src="skeleton_PNG5544.png" alt="Kills" style="width:100px;height:100px;"></td>
+            <td>Minions Killed</td>
+            <td>{{comparison.comparersStats.minionsKilled}}</td>
+            <td>{{comparison.compareeStats.minionsKilled}}</td>
+        </tr>
+        <tr>
+            <td><img src="help.png" alt="Assists" style="width:100px;height:100px;"></td>
+            <td>Assists</td>
+            <td>{{comparison.comparersStats.assists}}</td>
+            <td>{{comparison.compareeStats.assists}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div ng-if="isApiKeySet">
+    <form role="form" ng-submit="compare()">
+        <div class="form-group">
+            <label for="name">Summoner Name:</label> <input type="text"
+                                                           class="form-control" id="name" name="summoner"
+                                                           ng-model="summoner.name"/>
+        </div>
+        <button class="btn btn-primary" type="submit">Compare</button>
+    </form>
+</div>

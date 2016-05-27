@@ -2,10 +2,12 @@ package com.loc_2.services;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loc_2.daos.ComparisonRepository;
 import com.loc_2.daos.SummonerRepository;
 import com.loc_2.daos.UserRepository;
 import com.loc_2.dtos.RecentGamesDto;
 import com.loc_2.dtos.SummonerDto;
+import com.loc_2.entities.Comparison;
 import com.loc_2.entities.RawStatsSummary;
 import com.loc_2.entities.Summoner;
 import com.loc_2.entities.User;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +33,9 @@ public class RiotApiService {
 
     @Autowired
     private SummonerRepository summonerRepository;
+
+    @Autowired
+    private ComparisonRepository comparisonRepository;
 
     private RestWrapper restWrapper = new RestWrapper();
 
@@ -65,6 +71,36 @@ public class RiotApiService {
         return summonerDto;
     }
 
+    public Comparison compare(String summonerName, String username) throws ApiKeyNotFoundException, RiotLimitException, HttpClientErrorException {
+        User user = userRepository.findByUsername(username);
+        Comparison comparison = new Comparison();
+        comparison.setComparer(user);
+        comparison.setComparersStats(getMyStats(username));
+        comparison.setCompareeStats(getSummonerStats(summonerName, username));
+        comparison.setDate(new Date());
+        Summoner summoner = summonerRepository.findByUsername(summonerName);
+        comparison.setComparee(summoner);
+        comparisonRepository.save(comparison);
+        return comparison;
+    }
+
+    public List<Comparison> getComparedToMe(String username) {
+        User user = userRepository.findByUsername(username);
+        return comparisonRepository.findComparedToMe(user);
+    }
+
+    public void viewComparisons(String username) {
+        User user = userRepository.findByUsername(username);
+        comparisonRepository.view(user);
+    }
+
+    public void isApiKeySet(String username) throws ApiKeyNotFoundException {
+        User user = userRepository.findByUsername(username);
+        String apikey = user.getApikey();
+        if (apikey == null) {
+            throw new ApiKeyNotFoundException();
+        }
+    }
 
     private String getApiKey(User user) throws ApiKeyNotFoundException {
         String apikey = user.getApikey();
