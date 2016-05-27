@@ -190,13 +190,17 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
     }]).controller('compareCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', function ($scope, $http, $location, $route, $rootScope) {
         var scope = $scope;
         scope.summoner = {};
-        scope.comparison = {};
         scope.notificationData = {};
         scope.compared = false;
+        scope.comparees = [];
 
         scope.compare = function () {
             $http.get('/riot/compare/' + scope.summoner.name, {}).success(function (data, status) {
-                scope.comparison = data;
+                if(!scope.comparees.length){
+                    data.comparer.name = data.comparer.username;
+                    scope.comparees.push({data : data.comparer, stats : data.comparersStats, isVisible : true});
+                }
+                scope.comparees.push({data : data.comparee, stats : data.compareeStats, isVisible : true});
                 scope.compared = true
             }).error(function (data, status) {
                 console.log("Compare failure " + status)
