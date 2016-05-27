@@ -140,8 +140,8 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
             scope.greeting = response.data;
         })
     }).controller('statCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', function ($scope, $http, $location, $route, $rootScope) {
-    var scope = $scope;
-    console.log(scope);
+    var scope  = $scope;
+    scope.comparorsList = [];
 
     scope.refreshStats = function () {
         $http.post('/riot/refreshstats', {}).success(function (data, status) {
@@ -154,7 +154,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
 
     scope.getStats = function () {
         $http.get('/riot/getstats').success(function (data, status) {
-            $rootScope.userData = data;
+            scope.userData = data;
             $rootScope.isApiKeySet = true;
             console.log("Get Stats success ");
             console.log(JSON.stringify(data));
@@ -166,11 +166,23 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
 
     scope.getLastRefresh = function () {
         $http.get('/riot/getlastrefresh').success(function (data, status) {
-            $rootScope.lastRefresh = data;
+            scope.lastRefresh = data;
             console.log("Get Last Refresh success ");
             console.log(JSON.stringify(data));
         }).error(function (data, status) {
             console.log("Get Last Refresh failure " + status)
+        });
+    };
+
+    scope.getUserStats = function(){
+        $http.get('/riot/getstats/'+scope.userToCompare).success(function (data, status) {
+            var user = {name : scope.userToCompare, stats : data, isVisible : true};
+            scope.comparorsList.push(user);
+            console.log(scope.comparorsList);
+            console.log("Get Opponents Stats Success!");
+            console.log(JSON.stringify(data));
+        }).error(function (data, status) {
+            console.log("Get Opponents Stats failure " + status)
         });
     };
     scope.getStats();
