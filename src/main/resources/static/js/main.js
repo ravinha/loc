@@ -148,8 +148,6 @@ angular.module('leagueOfComperors', ['ngRoute', 'angular-growl', 'ngAnimate']).c
     scope.getNotifications = function() {
         $http.get('/riot/getcompared', {}).success(function (data, status) {
             if(data.length){
-                console.log("Notifications:");
-                console.log(data);
                 data.forEach(function(notification){
                     growl.info("User "+ notification.comparer.username + " has compared with you. \r " +
                         "For more info: <a href='http://www.lolking.net/summoner/eune/"+notification.comparer.summoner.id+"'>"+notification.comparer.summoner.name+"</a>");
