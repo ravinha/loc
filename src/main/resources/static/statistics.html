@@ -1,84 +1,35 @@
-<div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
-<div ng-if="isApiKeySet">
-    <form role="form" ng-submit="getUserStats()">
-        <div class="form-group">
-            <label for="key">With who do you want to compare?</label> <input type="text"
-                                                                             class="form-control" id="key"
-                                                                             name="userToCompare"
-                                                                             ng-model="userToCompare"/>
+<div class="main-container">
+    <div class="fixer-container">
+        <h1 class="home-hello">League of Comperors</h1>
+        <img src="lol.png" alt="lol">
+        <div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.
         </div>
-        <button type="submit" class="btn btn-primary">Compare!</button>
-    </form>
-    <table class="table table-striped">
-        <tbody>
-        <tr>
-            <td><img src="chest.jpg" alt="Gold" style="width:25px;height:25px;"></td>
-            <td>Gold Earned</td>
-            <td>{{userData.goldEarned}}</td>
-        </tr>
-        <tr>
-            <td><img src="tower.png" alt="Tower" style="width:25px;height:25px;"></td>
-            <td>Turrets Killed</td>
-            <td>{{userData.turretsKilled}}</td>
-        </tr>
-        <tr>
-            <td><img src="skeleton_PNG5544.png" alt="Kills" style="width:25px;height:25px;"></td>
-            <td>Minions Killed</td>
-            <td>{{userData.minionsKilled}}</td>
-        </tr>
-        <tr>
-            <td><img src="help.png" alt="Assists" style="width:25px;height:25px;"></td>
-            <td>Assists</td>
-            <td>{{userData.assists}}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <div>
-            <div><img src="chest.jpg" alt="Gold" style="width:25px;height:25px;"></div>
-            <div>Gold Earned</div>
-            <div>{{userData.goldEarned}}</div>
-        </div>
-        <div>
-            <div><img src="tower.png" alt="Tower" style="width:25px;height:25px;"></div>
-            <div>Turrets Killed</div>
-            <div>{{userData.turretsKilled}}</div>
-        </div>
-        <div>
-            <div><img src="skeleton_PNG5544.png" alt="Kills" style="width:25px;height:25px;"></div>
-            <div>Minions Killed</div>
-            <div>{{userData.minionsKilled}}</div>
-        </div>
-        <div>
-            <div><img src="help.png" alt="Assists" style="width:25px;height:25px;"></div>
-            <div>Assists</div>
-            <div>{{userData.assists}}</div>
+        <div ng-if="isApiKeySet">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <td><img src="chest.jpg" alt="Gold" style="width:25px;height:25px;"></td>
+                    <td>Gold Earned</td>
+                    <td>{{userData.goldEarned}}</td>
+                </tr>
+                <tr>
+                    <td><img src="tower.png" alt="Tower" style="width:25px;height:25px;"></td>
+                    <td>Turrets Killed</td>
+                    <td>{{userData.turretsKilled}}</td>
+                </tr>
+                <tr>
+                    <td><img src="skeleton_PNG5544.png" alt="Kills" style="width:25px;height:25px;"></td>
+                    <td>Minions Killed</td>
+                    <td>{{userData.minionsKilled}}</td>
+                </tr>
+                <tr>
+                    <td><img src="help.png" alt="Assists" style="width:25px;height:25px;"></td>
+                    <td>Assists</td>
+                    <td>{{userData.assists}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary" ng-click="refreshStats()">Refresh Stats</button>
         </div>
     </div>
-    <div ng-repeat="user in comparorsList">
-        <div ng-click="user.isVisible = !(user.isVisible)">user.name</div>
-        <div ng-if="user.isVisible">
-            <div>
-                <div><img src="chest.jpg" alt="Gold" style="width:25px;height:25px;"></div>
-                <div>Gold Earned</div>
-                <div>{{user.stats.goldEarned}}</div>
-            </div>
-            <div>
-                <div><img src="tower.png" alt="Tower" style="width:25px;height:25px;"></div>
-                <div>Turrets Killed</div>
-                <div>{{user.stats.turretsKilled}}</div>
-            </div>
-            <div>
-                <div><img src="skeleton_PNG5544.png" alt="Kills" style="width:25px;height:25px;"></div>
-                <div>Minions Killed</div>
-                <div>{{user.stats.minionsKilled}}</div>
-            </div>
-            <div>
-                <div><img src="help.png" alt="Assists" style="width:25px;height:25px;"></div>
-                <div>Assists</div>
-                <div>{{user.stats.assists}}</div>
-            </div>
-        </div>
-    </div>
-    <button class="btn btn-primary" ng-click="refreshStats()">Refresh Stats</button>
 </div>

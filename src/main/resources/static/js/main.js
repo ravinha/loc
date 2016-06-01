@@ -1,20 +1,16 @@
-angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider, $httpProvider) {
+angular.module('leagueOfComperors', ['ngRoute', 'angular-growl', 'ngAnimate']).config(['$routeProvider', '$httpProvider','growlProvider', function ($routeProvider, $httpProvider, growlProvider) {
 
     $routeProvider.when('/', {
         templateUrl: 'login.html',
         controller: 'main',
         controllerAs: 'controller'
     }).when('/home', {
-        templateUrl: 'home.html',
-        controller: 'main',
+        templateUrl: 'statistics.html',
+        controller: 'statCtrl',
         controllerAs: 'controller'
     }).when('/register', {
         templateUrl: 'register.html',
         controller: 'main',
-        controllerAs: 'controller'
-    }).when('/stats', {
-        templateUrl: 'statistics.html',
-        controller: 'statCtrl',
         controllerAs: 'controller'
     }).when('/compare', {
         templateUrl: 'compare.html',
@@ -27,10 +23,11 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
     }).otherwise('/');
 
     $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    growlProvider.globalTimeToLive(20000);
 
-}).controller('main', ['$scope', '$http', '$location', '$route', '$rootScope',
+}]).controller('main', ['$scope', '$http', '$location', '$route', '$rootScope', 'growl',
 
-    function ($scope, $http, $location, $route, $rootScope) {
+    function ($scope, $http, $location, $route, $rootScope, growl) {
 
         var self = this;
 
@@ -69,8 +66,8 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
         self.login = function () {
             authenticate(self.credentials, function (authenticated) {
                 if (authenticated) {
-                    console.log("Login succeeded"+self.credentials);
-                    console.log("Login succeeded"+JSON.stringify(self.credentials));
+                    console.log("Login succeeded" + self.credentials);
+                    console.log("Login succeeded" + JSON.stringify(self.credentials));
 
                     $location.path("/home");
                     self.error = false;
@@ -80,6 +77,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
                     $location.path("/login");
                     self.error = true;
                     $rootScope.authenticated = false;
+                    growl.error("Logging in failure. Try again. Not registered?");
                 }
             })
         };
@@ -87,6 +85,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
         self.logout = function () {
             $http.post('logout', {}).finally(function () {
                 $rootScope.authenticated = false;
+                $rootScope.isApiKeySet = false;
                 $location.path("/");
             });
         };
@@ -95,8 +94,10 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
             $http.post('/user/register', self.credentials).success(function (data, status) {
                 $location.path("/");
                 console.log("Registration succeeded")
+                growl.success("Registration succeeded.");
             }).error(function (data, status) {
                 console.log("Registration failure")
+                growl.error("Registration failure");
             });
         };
 
@@ -104,8 +105,10 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
             $http.post('/riot/setapikey', self.apikey).success(function (data, status) {
                 console.log("Generate ApiKey success ");
                 $rootScope.isApiKeySet = true;
+                growl.success("Setting ApiKey success!");
             }).error(function (data, status) {
                 $rootScope.isApiKeySet = false;
+                growl.error("Setting ApiKey failure! Try again!");
                 console.log("Generate ApiKey failure " + status)
             });
         };
@@ -130,7 +133,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
 
         self.goToUser = function () {
             $location.path("/userConfig");
-        }
+        };
         self.isApiKeySet();
     }]).controller('home', '$http', '$scope',
 
@@ -139,9 +142,29 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
         $http.get('/resource/').then(function (response) {
             scope.greeting = response.data;
         })
-    }).controller('statCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', function ($scope, $http, $location, $route, $rootScope) {
-    var scope  = $scope;
-    scope.comparorsList = [];
+    }).controller('statCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', 'growl', function ($scope, $http, $location, $route, $rootScope, growl) {
+    var scope = $scope;
+
+    scope.getNotifications = function() {
+        $http.get('/riot/getcompared', {}).success(function (data, status) {
+            if(data.length){
+                console.log("Notifications:");
+                console.log(data);
+                data.forEach(function(notification){
+                    growl.info("User "+ notification.comparer.username + " has compared with you. \r " +
+                        "For more info: <a href='http://www.lolking.net/summoner/eune/"+notification.comparer.summoner.id+"'>"+notification.comparer.summoner.name+"</a>");
+
+                });
+                $http.post('/riot/setviewed', {}).success(function (data, status) {
+                    console.log("Vieved notifications saved success");
+                }).error(function (data, status) {
+                    console.log("Vieved notifications saved failure "+ status);
+                });
+            }
+        }).error(function (data, status) {
+            console.log("Getting notifications failure " + status);
+        });
+    };
 
     scope.refreshStats = function () {
         $http.post('/riot/refreshstats', {}).success(function (data, status) {
@@ -160,6 +183,7 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
             console.log(JSON.stringify(data));
         }).error(function (data, status) {
             $rootScope.isApiKeySet = false;
+            growl.error("Get user stats error! Try again later...");
             console.log("Get Stats failure " + status)
         });
     };
@@ -174,54 +198,48 @@ angular.module('leagueOfComperors', ['ngRoute']).config(function ($routeProvider
         });
     };
 
-    scope.getUserStats = function(){
-        $http.get('/riot/getstats/'+scope.userToCompare).success(function (data, status) {
-            var user = {name : scope.userToCompare, stats : data, isVisible : true};
-            scope.comparorsList.push(user);
-            console.log(scope.comparorsList);
-            console.log("Get Opponents Stats Success!");
-            console.log(JSON.stringify(data));
-        }).error(function (data, status) {
-            console.log("Get Opponents Stats failure " + status)
-        });
-    };
     scope.getStats();
     scope.getLastRefresh();
-    }]).controller('compareCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', function ($scope, $http, $location, $route, $rootScope) {
-        var scope = $scope;
-        scope.summoner = {};
-        scope.notificationData = {};
-        scope.compared = false;
-        scope.comparees = [];
+    scope.getNotifications();
+}]).controller('compareCtrl', ['$scope', '$http', '$location', '$route', '$rootScope', 'growl', function ($scope, $http, $location, $route, $rootScope, growl) {
+    var scope = $scope;
 
-        scope.compare = function () {
-            $http.get('/riot/compare/' + scope.summoner.name, {}).success(function (data, status) {
-                if(!scope.comparees.length){
-                    data.comparer.name = data.comparer.username;
-                    scope.comparees.push({data : data.comparer, stats : data.comparersStats, isVisible : true});
-                }
-                scope.comparees.push({data : data.comparee, stats : data.compareeStats, isVisible : true});
-                scope.compared = true
-            }).error(function (data, status) {
-                console.log("Compare failure " + status)
-            });
-        };
+    scope.summoner = {};
+    scope.notificationData = {};
+    scope.compared = false;
+    scope.comparees = [];
 
-        scope.getCompared = function () {
-            $http.get('/riot/getcompared').success(function (data, status) {
-                scope.notificationData = data;
-                console.log(JSON.stringify(data));
-            }).error(function (data, status) {
-                console.log("Get Compared failure " + status)
-            });
-        };
-
-        scope.setViewed = function () {
-            $http.post('/riot/setviewed',{}).success(function (data, status) {
-                console.log("setviewed success " + data);
-                console.log(JSON.stringify(data));
-            }).error(function (data, status) {
-                console.log("setviewed failure " + status)
+    scope.compare = function () {
+        $http.get('/riot/compare/' + scope.summoner.name, {}).success(function (data, status) {
+            if (!scope.comparees.length) {
+                data.comparer.name = data.comparer.username;
+                scope.comparees.push({data: data.comparer, stats: data.comparersStats, isVisible: true});
+            }
+            scope.comparees.push({data: data.comparee, stats: data.compareeStats, isVisible: true});
+            scope.compared = true
+        }).error(function (data, status) {
+            growl.warning("Get Compared failure " + status);
+            console.log("Compare failure " + status)
         });
     };
-    }]);
+
+    scope.getCompared = function () {
+        $http.get('/riot/getcompared').success(function (data, status) {
+            scope.notificationData = data;
+            console.log(JSON.stringify(data));
+        }).error(function (data, status) {
+            growl.warning("Get Compared failure " + status);
+            console.log("Get Compared failure " + status)
+        });
+    };
+
+    scope.setViewed = function () {
+        $http.post('/riot/setviewed', {}).success(function (data, status) {
+            console.log("setviewed success " + data);
+            console.log(JSON.stringify(data));
+        }).error(function (data, status) {
+            growl.warning("Get Compared failure " + status);
+            console.log("setviewed failure " + status)
+        });
+    };
+}]);

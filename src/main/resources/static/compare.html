@@ -1,6 +1,7 @@
 <div class="main-container">
     <div class="fixer-container">
-        <div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.</div>
+        <div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.
+        </div>
         <div ng-if="isApiKeySet">
             <form role="form" ng-submit="compare()">
                 <div class="form-group pick-comparer-fields">

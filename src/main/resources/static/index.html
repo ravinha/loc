@@ -10,11 +10,11 @@
 </head>
 
 <body ng-app="leagueOfComperors" ng-cloak class="ng-cloak">
+<div growl limit-messages="4"></div>
 <nav ng-controller="main as main" class="container navbar navbar-default" style="background-color: #e3f2fd;" ng-show="authenticated">
     <ul class="nav navbar-nav navbar-left">
         <li class="active"><a href="#/home">Home</a></li>
         <li><a href="" ng-click="main.goToComparison()">Compare</a></li>
-        <li><a href="" ng-click="main.goToStats()">Your Stats</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
