@@ -1,4 +1,5 @@
 package com.loc_2.entities;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,7 +12,9 @@ public class User {
 
     @Id
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String apikey;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String role;
     @DBRef

@@ -1,5 +1,6 @@
 package com.loc_2.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +11,7 @@ import java.util.Date;
  * Created by Rafal on 2016-05-27.
  */
 @Document(collection = "comparisons")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Comparison {
     @Id
     private String id;
