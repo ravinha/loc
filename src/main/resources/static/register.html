@@ -1,21 +1,21 @@
 <div class="row">
-    <h1 class="page-header">
+    <h1 class="login-header hdr-league">League of Comperors</h1>
+    <h1 class="page-header hdr-league">
         Register
     </h1>
     <form ng-submit="controller.register()">
         <div class="form-group">
-            <label>Username:</label>
+            <label class="hdr-input">Username:</label>
             <input type="text" ng-model="controller.credentials.username" class="form-control" />
         </div>
         <div class="form-group">
-            <label>Password:</label>
+            <label class="hdr-input">Password:</label>
             <input type="password" ng-model="controller.credentials.password" class="form-control" />
         </div>
         <div class="form-group">
-            <label>Summoner Name:</label>
+            <label class="hdr-input">Summoner Name:</label>
             <input type="text" ng-model="controller.credentials.summoner.name" class="form-control" />
         </div>
-        <button class="btn btn-success" type="submit">Summon</button>
-        <h1>League of Comperors</h1>
+        <button class="btn btn-league" type="submit">Summon</button>
     </form>
 </div>

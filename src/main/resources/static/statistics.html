@@ -1,11 +1,13 @@
 <div class="main-container">
     <div class="fixer-container">
-        <h1 class="home-hello">League of Comperors</h1>
-        <img src="lol.png" alt="lol">
-        <div ng-if="!isApiKeySet">You Riot Api key is not set. Pls set it in your<a href="#/userConfig"> profile</a>.
+        <div ng-if="!isApiKeySet" class="text-league">You Riot Api key is not set. Pls set it in your<a class="link-league" href="#/userConfig"> profile</a>.
         </div>
-        <div ng-if="isApiKeySet">
-            <table class="table table-striped">
+        <img class="scroll-bg" src="scroll.jpg">
+        <img class="trist-pict" src="trist.png">
+        <img class="ekko-pict" src="ekko.png">
+        <div class="stats-view" ng-if="isApiKeySet">
+            <div class="hdr-view">Your current stats</div>
+            <table class="table table-striped table-league">
                 <tbody>
                 <tr>
                     <td><img src="chest.jpg" alt="Gold" style="width:25px;height:25px;"></td>
@@ -18,7 +20,7 @@
                     <td>{{userData.turretsKilled}}</td>
                 </tr>
                 <tr>
-                    <td><img src="skeleton_PNG5544.png" alt="Kills" style="width:25px;height:25px;"></td>
+                    <td><img src="skull.png" alt="Kills" style="width:25px;height:25px;"></td>
                     <td>Minions Killed</td>
                     <td>{{userData.minionsKilled}}</td>
                 </tr>
@@ -29,7 +31,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button class="btn btn-primary" ng-click="refreshStats()">Refresh Stats</button>
+            <button class="btn btn-league" ng-click="refreshStats()">Refresh Stats</button>
         </div>
     </div>
 </div>
